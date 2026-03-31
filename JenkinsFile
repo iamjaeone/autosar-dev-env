@@ -24,7 +24,7 @@ pipeline {
                 archiveArtifacts artifacts: 'cppcheck-result.xml', allowEmptyArchive: true
             }
         }
-    }
+    }   
 
     post {
         always {
