@@ -4,14 +4,13 @@ pipeline {
     stages {
         stage('1. Checkout') {
             steps {
-                echo 'Checking out code from GitHub...'
+                githubNotify status: 'PENDING', description: 'MISRA Check is running...'
                 checkout scm
             }
         }
 
         stage('2. MISRA C Check (Cppcheck)') {
             steps {
-                echo 'Starting MISRA C Static Analysis...'
                 script {
                     sh 'cppcheck --enable=all --inconclusive --xml Static_Code/Reference_Code/ASW/ 2> cppcheck-result.xml'
                 }
@@ -20,21 +19,17 @@ pipeline {
 
         stage('3. Publish Results') {
             steps {
-                echo 'Publishing analysis reports...'
                 archiveArtifacts artifacts: 'cppcheck-result.xml', allowEmptyArchive: true
             }
         }
-    }   
+    }
 
     post {
-        always {
-            echo 'Pipeline finished.'
-        }
         success {
-            echo 'MISRA Check Passed! Ready to merge.'
+            githubNotify status: 'SUCCESS', description: 'MISRA Check Passed!'
         }
         failure {
-            echo 'MISRA Check Failed. Please review the report.'
+            githubNotify status: 'FAILURE', description: 'MISRA Check Failed. Please check the report.'
         }
     }
 }
