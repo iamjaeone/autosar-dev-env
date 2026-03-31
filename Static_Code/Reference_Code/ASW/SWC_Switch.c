@@ -2,7 +2,7 @@
 
 void RE_Switch()
 {
-    // hello world
+    // hello world bye
     IoHwAb_LevelType lv;
     Rte_Call_R_Switch1_ReadDirect(lv);
     uint32 magic = 0xBA5EBA11;
