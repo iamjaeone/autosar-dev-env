@@ -3,6 +3,29 @@
   <AR-PACKAGES>
     <AR-PACKAGE UUID="0f3240ac-488d-45b6-935d-b7b1785459bd">
       <SHORT-NAME>App_Interfaces</SHORT-NAME>
+      <ELEMENTS>
+        <CLIENT-SERVER-INTERFACE UUID="4353ce5b-2ae6-4447-bd5f-3752de835675">
+          <SHORT-NAME>If_TestInterface</SHORT-NAME>
+          <IS-SERVICE>false</IS-SERVICE>
+          <OPERATIONS>
+            <CLIENT-SERVER-OPERATION UUID="8cc2e22e-50a5-4dc5-8e01-c426d27ed0c8">
+              <SHORT-NAME>TestOperation</SHORT-NAME>
+              <ARGUMENTS>
+                <ARGUMENT-DATA-PROTOTYPE UUID="4feca5fc-5cdc-4630-9f2a-4295b3cbb65f">
+                  <SHORT-NAME>ledOn</SHORT-NAME>
+                  <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/AUTOSAR_DataTypes/ImplementationDataTypes/boolean</TYPE-TREF>
+                  <DIRECTION>IN</DIRECTION>
+                </ARGUMENT-DATA-PROTOTYPE>
+                <ARGUMENT-DATA-PROTOTYPE UUID="389b24b0-e455-417e-b782-c056e96c707b">
+                  <SHORT-NAME>magicNumber</SHORT-NAME>
+                  <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/AUTOSAR_DataTypes/ImplementationDataTypes/uint32</TYPE-TREF>
+                  <DIRECTION>INOUT</DIRECTION>
+                </ARGUMENT-DATA-PROTOTYPE>
+              </ARGUMENTS>
+            </CLIENT-SERVER-OPERATION>
+          </OPERATIONS>
+        </CLIENT-SERVER-INTERFACE>
+      </ELEMENTS>
     </AR-PACKAGE>
   </AR-PACKAGES>
 </AUTOSAR>
