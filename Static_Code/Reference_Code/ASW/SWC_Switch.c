@@ -9,4 +9,5 @@ void RE_Switch()
     {
         Rte_Call_R_TestInterface_TestOperation((lv == IOHWAB_HIGH), &magic);
     }
+
 }
