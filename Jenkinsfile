@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo 'Starting MISRA C Static Analysis...'
                 script {
-                    sh 'cppcheck --enable=all --inconclusive --xml Static_Code/Reference_Code/ASW/ 2> cppcheck-result.xml'
+                    sh 'cppcheck --enable=all --inconclusive --addon=misra --xml Static_Code/Reference_Code/ASW/ 2> cppcheck-result.xml'
                 }
             }
         }
