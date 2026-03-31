@@ -6,6 +6,12 @@ pipeline {
             steps {
                 echo 'Checking out code from GitHub...'
                 checkout scm
+                
+                step([
+                    $class: 'GitHubCommitStatusSetter',
+                    contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: 'continuous-integration/jenkins/pr-merge'],
+                    statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'MISRA Check is running...', state: 'PENDING']]]
+                ])
             }
         }
 
@@ -32,9 +38,19 @@ pipeline {
         }
         success {
             echo 'MISRA Check Passed! Ready to merge.'
+            step([
+                $class: 'GitHubCommitStatusSetter',
+                contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: 'continuous-integration/jenkins/pr-merge'],
+                statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'MISRA Check Passed!', state: 'SUCCESS']]]
+            ])
         }
         failure {
             echo 'MISRA Check Failed. Please review the report.'
+            step([
+                $class: 'GitHubCommitStatusSetter',
+                contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: 'continuous-integration/jenkins/pr-merge'],
+                statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'MISRA Check Failed.', state: 'FAILURE']]]
+            ])
         }
     }
 }
