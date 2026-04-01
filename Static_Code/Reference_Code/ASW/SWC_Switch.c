@@ -1,6 +1,8 @@
 // cppcheck-suppress missingInclude
 #include "Rte_SWC_Switch.h"
 
+void RE_Switch(void);
+
 // cppcheck-suppress unusedFunction
 void RE_Switch(void)
 {
