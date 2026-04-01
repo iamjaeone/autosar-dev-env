@@ -28,6 +28,7 @@ pipeline {
         always {
             recordIssues(
                 enabledForFailure: true, 
+                skipPublishingChecks: true, 
                 tools: [cppCheck(pattern: 'cppcheck-report.xml')]
             )
             
