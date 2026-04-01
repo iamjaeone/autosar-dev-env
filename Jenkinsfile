@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     def status = sh(
-                        script: 'cppcheck --enable=all --addon=misra --error-exitcode=1 --xml --xml-version=2 Static_Code/Reference_Code/ASW/ 2> cppcheck-report.xml', 
+                        script: 'cppcheck --inline-suppr --enable=all --addon=misra --error-exitcode=1 --xml --xml-version=2 Static_Code/Reference_Code/ASW/ 2> cppcheck-report.xml', 
                         returnStatus: true
                     )
                     
