@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     def status = sh(
-                        script: 'cppcheck --addon=misra.json --error-exitcode=1 src/', 
+                        script: 'cppcheck --inline-suppr --enable=all --addon=misra --error-exitcode=1 --xml --xml-version=2 Static_Code/Reference_Code/ASW/ 2> cppcheck-report.xml', 
                         returnStatus: true
                     )
                     
@@ -26,6 +26,12 @@ pipeline {
     
     post {
         always {
+            recordIssues(
+                enabledForFailure: true, 
+                skipPublishingChecks: true, 
+                tools: [cppCheck(pattern: 'cppcheck-report.xml')]
+            )
+            
             echo "Pipeline finished."
         }
         success {
