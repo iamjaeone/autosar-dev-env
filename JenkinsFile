@@ -2,34 +2,37 @@ pipeline {
     agent any
 
     stages {
-        stage('1. Checkout') {
+        stage('Checkout') {
             steps {
-                githubNotify status: 'PENDING', description: 'MISRA Check is running...'
                 checkout scm
             }
         }
 
-        stage('2. MISRA C Check (Cppcheck)') {
+        stage('MISRA C Check') {
             steps {
                 script {
-                    sh 'cppcheck --enable=all --inconclusive --xml Static_Code/Reference_Code/ASW/ 2> cppcheck-result.xml'
+                    def status = sh(
+                        script: 'cppcheck --addon=misra.json --error-exitcode=1 src/', 
+                        returnStatus: true
+                    )
+                    
+                    if (status != 0) {
+                        error "MISRA C compliance check failed!"
+                    }
                 }
             }
         }
-
-        stage('3. Publish Results') {
-            steps {
-                archiveArtifacts artifacts: 'cppcheck-result.xml', allowEmptyArchive: true
-            }
-        }
     }
-
+    
     post {
+        always {
+            echo "Pipeline finished."
+        }
         success {
-            githubNotify status: 'SUCCESS', description: 'MISRA Check Passed!'
+            echo "MISRA C Passed. PR is ready to merge!"
         }
         failure {
-            githubNotify status: 'FAILURE', description: 'MISRA Check Failed. Please check the report.'
+            echo "MISRA C Failed. Fix the violations."
         }
     }
 }
