@@ -28,7 +28,7 @@ pipeline {
         always {
             recordIssues(
                 enabledForFailure: true, 
-                tool: cppCheck(pattern: 'cppcheck-report.xml')
+                tools: [cppCheck(pattern: 'cppcheck-report.xml')]
             )
             
             echo "Pipeline finished."
