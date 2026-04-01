@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     def status = sh(
-                        script: 'cppcheck --addon=misra --error-exitcode=1 Static_Code/Reference_Code/ASW/',
+                        sh 'cppcheck --enable=all --addon=misra --error-exitcode=1 Static_Code/Reference_Code/ASW/',
                         returnStatus: true
                     )
                     
