@@ -2,55 +2,37 @@ pipeline {
     agent any
 
     stages {
-        stage('1. Checkout') {
+        stage('Checkout') {
             steps {
-                echo 'Checking out code from GitHub...'
                 checkout scm
-                
-                step([
-                    $class: 'GitHubCommitStatusSetter',
-                    contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: 'continuous-integration/jenkins/pr-merge'],
-                    statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'MISRA Check is running...', state: 'PENDING']]]
-                ])
             }
         }
 
-        stage('2. MISRA C Check (Cppcheck)') {
+        stage('MISRA C Check') {
             steps {
-                echo 'Starting MISRA C Static Analysis...'
                 script {
-                    sh 'cppcheck --enable=all --inconclusive --addon=misra --xml Static_Code/Reference_Code/ASW/ 2> cppcheck-result.xml'
+                    def status = sh(
+                        script: 'cppcheck --addon=misra.json --error-exitcode=1 src/', 
+                        returnStatus: true
+                    )
+                    
+                    if (status != 0) {
+                        error "MISRA C compliance check failed!"
+                    }
                 }
             }
         }
-
-        stage('3. Publish Results') {
-            steps {
-                echo 'Publishing analysis reports...'
-                archiveArtifacts artifacts: 'cppcheck-result.xml', allowEmptyArchive: true
-            }
-        }
     }
-
+    
     post {
         always {
-            echo 'Pipeline finished.'
+            echo "Pipeline finished."
         }
         success {
-            echo 'MISRA Check Passed! Ready to merge.'
-            step([
-                $class: 'GitHubCommitStatusSetter',
-                contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: 'continuous-integration/jenkins/pr-merge'],
-                statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'MISRA Check Passed!', state: 'SUCCESS']]]
-            ])
+            echo "MISRA C Passed. PR is ready to merge!"
         }
         failure {
-            echo 'MISRA Check Failed. Please review the report.'
-            step([
-                $class: 'GitHubCommitStatusSetter',
-                contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: 'continuous-integration/jenkins/pr-merge'],
-                statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'MISRA Check Failed.', state: 'FAILURE']]]
-            ])
+            echo "MISRA C Failed. Fix the violations."
         }
     }
 }
