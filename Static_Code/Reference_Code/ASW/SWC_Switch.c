@@ -2,7 +2,7 @@
 #include "Rte_SWC_Switch.h"
 
 // cppcheck-suppress unusedFunction
-// cppcheck-suppress misra-c2012-8.7
+// cppcheck-suppress misra-c2012-8.4
 void RE_Switch(void)
 {
     IoHwAb_LevelType lv;
